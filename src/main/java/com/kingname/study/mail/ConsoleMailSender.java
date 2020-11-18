@@ -1,4 +1,4 @@
-package com.kingname.study;
+package com.kingname.study.mail;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
