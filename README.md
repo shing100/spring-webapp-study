@@ -51,3 +51,20 @@
 - 코드가 적절한 위치에 있는가?
 - 객체들 사이의 의존 관계
 - 책임이 너무 많진 않은지
+
+
+## 뷰 중복 코드 제거
+- 타임리프 프레그먼트 (Fragement) 사용하기
+> https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#including-template-fragments
+
+- 프레그먼트 정의
+    - th:fragement
+     
+- 프레그먼트 사용
+    - th:insert 
+    - th:replace
+
+### 뷰 중복 코드
+- 메인 네비게이션
+- 하단 (footer)
+- 헤더 (head)

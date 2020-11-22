@@ -40,6 +40,8 @@ public class AccountController {
             return "account/sign-up";
         }
         Account account = accountService.processNewAccount(signUpForm);
+
+        // TODO 이메일 체크 확인 화면으로 이동
         accountService.login(account);
         return "redirect:/";
     }
