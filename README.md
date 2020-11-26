@@ -68,3 +68,30 @@
 - 메인 네비게이션
 - 하단 (footer)
 - 헤더 (head)
+
+
+## 뷰 보안
+- 네비게이션 바에 Fontawesome으로 아이콘 추가
+- 이메일 인증을 마치지 않은 사용자에게 메시지 보여주기
+- jdenticon으로 프로필 기본 이미지 생성하기
+
+### NPM으로 프론트엔f드 라이브러리 설치
+- npm install font-awesome
+- npm install jdenticon
+
+### 폰트어썸 아이콘 사용하기
+- <i class=”fa fa-XXXX”></i>
+
+### Jdenticon으로 아바타 생성하기
+- <svg width="80" height="80" data-jdenticon-value="user127"></svg>
+
+### 타임리프 조건문
+- th:if
+
+### 부트스트랩 경고창
+```html
+<div class="alert alert-warning" role="alert" th:if="${account != null && !account?.emailVerified}">
+     스터디올레 가입을 완료하려면 <a href="#" th:href="@{/check-email}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
+</div>
+```
+
