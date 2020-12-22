@@ -172,3 +172,40 @@ public PersistentTokenRepository tokenRepository() {
 - 스터디올래의 선택
     - 데이터 변경은 서비스 계층으로 위임해서 트랜잭션안에서 처리한다.
     - 데이터 조회는 리파지토리 또는 서비스를 사용한다.
+
+
+## 프로필 수정 테스트
+
+- 인증된 사용자가 접근할 수 있는 기능 테스트하기
+- 실제 DB에 저장되어 있는 정보에 대응하는 인증된 Authentication이 필요하다.
+- @WithMockUser로는 처리할 수 없다.
+
+## 인증된 사용자를 제공할 커스텀 애노테이션 만들기
+- @WithAccount
+- https://docs.spring.io/spring-security/site/docs/current/reference/html/test.html
+
+## 커스텀 애노테이션 생성
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@WithSecurityContext(factory = WithAccountSecurityContextFacotry.class)
+public @interface WithAccount {
+
+    String value();
+
+}
+```
+## SecurityContextFactory 구현
+```java
+public class WithAccountSecurityContextFacotry implements WithSecurityContextFactory<WithAccount> {
+
+    // 빈을 주입 받을 수 있다.
+
+    // Authentication 만들고 SecurityuContext에 넣어주기
+        UserDetails principal = accountService.loadUserByUsername(nickname);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+}
+```
+
+
