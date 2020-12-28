@@ -208,4 +208,41 @@ public class WithAccountSecurityContextFacotry implements WithSecurityContextFac
 }
 ```
 
+## 프론트 라이브러리 설치
+- Cropper.JS
+- npm install cropper
+- npm install jquery-cropper
 
+## Cropper.js 사용하기
+```javascript
+$("#profile-image-file").change(function(e) {
+    if (e.target.files.length === 1) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            if (e.target.result) {
+                let img = document.createElement("img");
+                img.id = 'new-profile';
+                img.src = e.target.result;
+                img.width = 250;
+
+                $newProfileImage.html(img);
+                $newProfileImage.show();
+                $currentProfileImage.hide();
+
+                let $newImage = $(img);
+                $newImage.cropper({aspectRatio: 1});
+                cropper = $newImage.data('cropper');
+
+                $cutBtn.show();
+                $confirmBtn.hide();
+                $resetBtn.show();
+            }
+        };
+
+        reader.readAsDataURL(e.target.files[0]);
+    }
+});
+```
+### DataURL 이란?
+- data: 라는 접두어를 가진 URL로 파일을 문서에 내장 시킬때 사용할 수 있다.
+- 이미지를 DataURL로 저장할 수 있다.

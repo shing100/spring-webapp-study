@@ -90,7 +90,7 @@ public class AccountService implements UserDetailsService {
         account.setOccupation(profile.getOccupation());
         account.setLocation(profile.getLocation());
         account.setBio(profile.getBio());
-        // TODO 프로필 이미지
+        account.setProfileImage(profile.getProfileImage());
         accountRepository.save(account);
 
         // TODO 문제 해결 한가지 해야함
