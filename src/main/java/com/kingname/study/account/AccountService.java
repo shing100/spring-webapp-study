@@ -95,4 +95,9 @@ public class AccountService implements UserDetailsService {
 
         // TODO 문제 해결 한가지 해야함
     }
+
+    public void updatePassword(Account account, String newPassword) {
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+    }
 }
