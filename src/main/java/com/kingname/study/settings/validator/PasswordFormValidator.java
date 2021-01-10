@@ -1,5 +1,6 @@
-package com.kingname.study.settings;
+package com.kingname.study.settings.validator;
 
+import com.kingname.study.settings.form.PasswordForm;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
