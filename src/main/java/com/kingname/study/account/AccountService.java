@@ -1,6 +1,7 @@
 package com.kingname.study.account;
 
 import com.kingname.study.domain.Account;
+import com.kingname.study.domain.Tag;
 import com.kingname.study.settings.Notifications;
 import com.kingname.study.settings.Profile;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -117,5 +119,12 @@ public class AccountService implements UserDetailsService {
         mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken() +
                 "&email=" + account.getEmail());
         javaMailSender.send(mailMessage);
+    }
+
+    public void addTag(Account account, Tag tag) {
+        Optional<Account> byId = accountRepository.findById(account.getId());
+        byId.ifPresent(a -> a.getTags().add(tag));
+
+        // accountRepository.getOne() LazyLoding
     }
 }
