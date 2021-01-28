@@ -246,3 +246,61 @@ $("#profile-image-file").change(function(e) {
 ### DataURL 이란?
 - data: 라는 접두어를 가진 URL로 파일을 문서에 내장 시킬때 사용할 수 있다.
 - 이미지를 DataURL로 저장할 수 있다.
+
+## 패스워드 변경
+- 패스워드 탭 활성화.
+- 새 패스워드와 새 패스워드 확인의 값이 일치해야 한다.
+- 패스워드 인코딩 할 것!
+- 둘 다 최소 8자에서 최대 50자 사이.
+- 사용자 정보를 변경하는 작업.
+    - 서비스로 위임해서 트랜잭션 안에서 처리해야 한다.
+    - 또는 Detached 상태의 객체를 변경한 다음 Repositoiry의 save를 호출해서 상태 변경 내역을 적용 할 것(Merge)
+
+### GET /email-login
+이메일을 입력할 수 있는 폼을 보여주고, 링크 전송 버튼을 제공한다.
+
+### POST /email-login
+입력받은 이메일에 해당하는 계정을 찾아보고, 있는 계정이면 로그인 가능한 링크를 이메일로 전송한다.
+이메일 전송 후, 안내 메시지를 보여준다.
+
+### GET /login-by-email
+토큰과 이메일을 확인한 뒤 해당 계정으로 로그인한다.
+
+## 타임리프 자바스크립트 템플릿
+```javascript
+<script type="application/javascript" th:inline="javascript"></script>
+https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html#javascript-inlining
+Escaped: [[${variable}]]
+Unescaped: [(${variable})]
+네추럴 템플릿: /*[[${variable}]]*/ null;
+```
+
+## Ajax 호출시 CSRF 토큰을 전달 하는 방법
+> https://docs.spring.io/spring-security/site/docs/current/reference/html5/#servlet-csrf-include-ajax
+
+## 타임리프 자바스크립트 템플릿으로 Ajax 호출시 CSRF 토큰 설정
+```javascript
+<script type="application/javascript" th:inline="javascript">
+    $(function() {
+        var csrfToken = /*[[${_csrf.token}]]*/ null;
+        var csrfHeader = /*[[${_csrf.headerName}]]*/ null;
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        });
+    });
+</script>
+```
+    
+## 기존의 지역 정보 자동완성 목록에서만 선택 가능하다.
+- Tagify의 whitelist를 사용한다.
+> https://yaireo.github.io/tagify/#section-textarea
+```javascript
+var tagify = new Tagify(tagInput, {
+    enforceWhitelist: true,
+    whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+    dropdown : {
+        enabled: 1, // suggest tags after a single character input
+    } // map tags
+});
+```
+
