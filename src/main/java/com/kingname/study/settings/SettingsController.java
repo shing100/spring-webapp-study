@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/settings")
+@RequestMapping(SettingsController.ROOT + SettingsController.SETTINGS)
 @RequiredArgsConstructor
 public class SettingsController {
 

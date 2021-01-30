@@ -304,3 +304,52 @@ var tagify = new Tagify(tagInput, {
 });
 ```
 
+## PostgreSQL 설치 및 설정
+> https://www.postgresql.org/download/
+- OS에 따라 적절한 배포판 선택해서 설치.
+
+### 설치 이후에 할 일
+- psql에 접속할 것!
+- 윈도 사용자 (https://www.postgresqltutorial.com/connect-to-postgresql-database/)
+- 유닉스 계열 사용자
+    - 커맨드 창에서 psql 입력
+
+### DB와 유저(role) 만들고 유저에게 권한 할당하기
+```shell script
+Last login: Sat Feb 29 19:22:22 on ttys003
+➜  ~ psql
+psql (12.1)
+create database testdb;
+create user testuser with encrypted password 'testpass';
+grant all privileges on database testdb to testuser;
+```
+
+### application-dev.properties에 DB 정보 설정
+- dev 프로파일(Profile)용 설정 파일
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/testdb
+spring.datasource.username=testuser
+spring.datasource.password=testpass
+```
+
+## 구글 Gmail을 SMTP 서버로 사용하기
+> https://support.google.com/mail/answer/185833
+- App 패스워드 발급 받을 것
+
+
+## application-dev.properties 설정
+```properties
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=studyolledev@gmail.com // 본인 gmail 계정으로 바꾸세요.
+spring.mail.password=jsxtgzwirzbvctix // 위에서 발급받은 App 패스워드로 바꾸세요.
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.timeout=5000
+spring.mail.properties.mail.smtp.starttls.enable=true
+```
+
+- 대체 서비스
+- https://sendgrid.com/
+- https://www.mailgun.com/
+- https://aws.amazon.com/ses/
+- https://gsuite.google.com/
