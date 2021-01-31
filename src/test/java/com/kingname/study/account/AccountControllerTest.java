@@ -1,6 +1,8 @@
 package com.kingname.study.account;
 
 import com.kingname.study.domain.Account;
+import com.kingname.study.mail.EmailMessage;
+import com.kingname.study.mail.EmailService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,7 @@ class AccountControllerTest {
     private AccountRepository accountRepository;
 
     @MockBean
-    private JavaMailSender javaMailSender;
+    private EmailService emailService;
 
     @DisplayName("인증 메일 확인 - 입력값 오류")
     @Test
@@ -113,7 +115,7 @@ class AccountControllerTest {
         assertNotEquals(account.getPassword(), "12345678");
 
         assertTrue(accountRepository.existsByEmail("shing100@naver.com"));
-        then(javaMailSender).should().send(any(SimpleMailMessage.class));
+        then(emailService).should().sendEmail(any(EmailMessage.class));
     }
 
 }

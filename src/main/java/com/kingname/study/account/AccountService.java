@@ -3,12 +3,13 @@ package com.kingname.study.account;
 import com.kingname.study.domain.Account;
 import com.kingname.study.domain.Tag;
 import com.kingname.study.domain.Zone;
+import com.kingname.study.mail.EmailMessage;
+import com.kingname.study.mail.EmailService;
 import com.kingname.study.settings.Notifications;
 import com.kingname.study.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +31,7 @@ import java.util.Set;
 public class AccountService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
-    private final JavaMailSender javaMailSender;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
@@ -48,12 +49,14 @@ public class AccountService implements UserDetailsService {
     }
 
     public void sendSignUpConfirmEmail(Account newAccount) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newAccount.getEmail());
-        mailMessage.setSubject("가입하신 스터디, 회원 가입 인증");
-        mailMessage.setText("/check-email-token?token=" + newAccount.getEmailCheckToken() +
-                "&email=" + newAccount.getEmail());
-        javaMailSender.send(mailMessage);
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(newAccount.getEmail())
+                .subject("가입하신 스터디, 회원 가입 인증")
+                .message("/check-email-token?token=" + newAccount.getEmailCheckToken() +
+                        "&email=" + newAccount.getEmail())
+                .build();
+
+        emailService.sendEmail(emailMessage);
     }
 
     public void login(Account account) {
@@ -107,13 +110,15 @@ public class AccountService implements UserDetailsService {
     }
 
     public void sendLoginLink(Account account) {
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(account.getEmail())
+                .subject("스터디, 로그인 링크")
+                .message("/login-by-email?token=" + account.getEmailCheckToken() +
+                        "&email=" + account.getEmail())
+                .build();
+
         account.generateEmailCheckToken();
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(account.getEmail());
-        mailMessage.setSubject("스터디, 로그인 링크");
-        mailMessage.setText("/login-by-email?token=" + account.getEmailCheckToken() +
-                "&email=" + account.getEmail());
-        javaMailSender.send(mailMessage);
+        emailService.sendEmail(emailMessage);
     }
 
     public void addTag(Account account, Tag tag) {
