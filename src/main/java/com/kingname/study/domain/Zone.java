@@ -2,15 +2,13 @@ package com.kingname.study.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter @Setter
 @EqualsAndHashCode(of = "id") @Builder
 @AllArgsConstructor @NoArgsConstructor
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"city", "province"}))
 public class Zone {
 
     @Id
