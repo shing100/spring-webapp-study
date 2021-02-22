@@ -1,4 +1,4 @@
-package com.kingname.study.settings.form;
+package com.kingname.study.tag;
 
 import lombok.Data;
 

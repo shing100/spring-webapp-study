@@ -9,11 +9,12 @@ import com.kingname.study.domain.Tag;
 import com.kingname.study.domain.Zone;
 import com.kingname.study.settings.form.NicknameForm;
 import com.kingname.study.settings.form.PasswordForm;
-import com.kingname.study.settings.form.TagForm;
-import com.kingname.study.settings.form.ZoneForm;
 import com.kingname.study.settings.validator.NicknameFormValidator;
 import com.kingname.study.settings.validator.PasswordFormValidator;
+import com.kingname.study.tag.TagForm;
 import com.kingname.study.tag.TagRepository;
+import com.kingname.study.tag.TagService;
+import com.kingname.study.zone.ZoneForm;
 import com.kingname.study.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -46,6 +47,7 @@ public class SettingsController {
     static final String ZONES = "/zones";
 
     private final AccountService accountService;
+    private final TagService tagService;
     private final NicknameFormValidator nicknameValidator;
     private final ModelMapper modelMapper;
     private final TagRepository tagRepository;
@@ -157,10 +159,7 @@ public class SettingsController {
     @PostMapping(TAGS + "/add")
     @ResponseBody
     public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        String title = tagForm.getTagTitle();
-        Tag tag = tagRepository.findByTitle(title).orElseGet(() -> tagRepository.save(Tag.builder()
-                .title(tagForm.getTagTitle())
-                .build()));
+        Tag tag = tagService.findOrCreateNew(tagForm.getTagTitle());
         accountService.addTag(account, tag);
         return ResponseEntity.ok().build();
     }

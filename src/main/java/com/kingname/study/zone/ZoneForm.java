@@ -1,4 +1,4 @@
-package com.kingname.study.settings.form;
+package com.kingname.study.zone;
 
 import com.kingname.study.domain.Zone;
 import lombok.Data;
