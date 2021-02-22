@@ -7,6 +7,7 @@ import com.kingname.study.domain.Account;
 import com.kingname.study.domain.Study;
 import com.kingname.study.domain.Tag;
 import com.kingname.study.domain.Zone;
+import com.kingname.study.tag.TagForm;
 import com.kingname.study.zone.ZoneForm;
 import com.kingname.study.study.form.StudyDescriptionForm;
 import com.kingname.study.tag.TagRepository;
