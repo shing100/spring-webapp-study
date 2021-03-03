@@ -13,9 +13,9 @@
 - [X] 프로필 이미지 등록
 - [X] 알림 설정
 - [X] 패스워드 수정
-- [ ] 패스워드를 잊어버렸습니다
-- [ ] 관심 주제(태그) 등록
-- [ ] 주요 활동 지역 등록
+- [x] 패스워드를 잊어버렸습니다
+- [x] 관심 주제(태그) 등록
+- [x] 주요 활동 지역 등록
 
 
 ## 라이브러리
@@ -353,3 +353,128 @@ spring.mail.properties.mail.smtp.starttls.enable=true
 - https://www.mailgun.com/
 - https://aws.amazon.com/ses/
 - https://gsuite.google.com/
+
+### HTML 이메일 전송하기
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>스터디올래</title>
+</head>
+<body>
+    <div>
+        <p class="lead">안녕하세요, <span th:text="${nickname}"></span>님</p>
+
+        <h2 th:text="${message}">메시지</h2>
+
+        <div>
+            <a th:href="@{${host} + ${link}}" th:text="${linkName}">link name</a>
+            <p>링크를 동작하지 않는다면 URL 복사해서 사용하는 웹 브라우저에 붙여넣으세요.</p>
+            <small th:text="${host + link}"></small>
+        </div>
+    </div>
+    <footer>
+        <small class="d-block mb-3 text-muted">스터디올래&copy; 2020</small>
+    </footer>
+</body>
+</html>
+```
+
+## 스터디
+
+### 스터디 조회
+- 타임리프 Variable Expression에서 객체의 메소드 호출 가능
+```html
+th:if="${study.isManager(#authentication.principal)}"
+```
+```java
+    public boolean isManager(UserAccount userAccount) {
+        return this.managers.contains(userAccount.getAccount());
+    }
+```
+
+- 뷰를 변경할 때마다 발생하는 쿼리를 살펴보자.
+- 어차피 조회할 데이터라면 쿼리 개수를 줄이고 join을 해서 가져오자.
+- Left outer join으로 연관 데이터를 한번에 조회할 수도 있다.
+
+```java
+@EntityGraph
+@NamedEntityGraph(name = "Study.withAllRelations", attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("zones"),
+        @NamedAttributeNode("managers"),
+        @NamedAttributeNode("members")})
+
+
+@EntityGraph(value = "Study.withAllRelations", type = EntityGraph.EntityGraphType.LOAD)
+```
+
+
+- 타임리프 프레그먼트에 리스트와 true/false 전달하기
+```html
+<div th:replace="fragments.html :: member-list(members=${study.managers},isManager=${true})"></div>
+```
+
+- 타임리프 프레그먼트
+```html
+<div th:fragment="member-list (members, isManager)" class="row px-3 justify-content-center">
+...
+</div>
+```
+
+### 타임리프 반복문
+```java
+<li class="media mt-3" th:each="member: ${members}">
+        <h5 class="mt-0 mb-1"><span th:text="${member.nickname}"></span></h5>
+        <span th:text="${member.bio}"></span>
+    </div>
+</li>
+```
+
+- 기본 이미지 제공
+```java
+public String getImage() {
+    return image != null ? image : "/images/default-banner.png";
+}
+```
+
+### 서버 요청 크기 설정
+- 톰캣 기본 요청 사이즈는 2MB 입니다. 그것보다 큰 요청을 받고 싶은 경우에 이 값을 조정해야 합니다.
+- server.tomcat.max-http-form-post-size=5MB
+
+
+### 이미지 파일 업로드 시 고려할 점
+- 이미지 파일인지 확인 (이미지가 아닌 파일을 업로드 하려는건 아닌지 확인)
+- 이미지 크기 확인 (너무 큰 이미지 업로드 하지 않도록)
+
+### 스터디 설정 - 태그/지역
+- 데이터를 필요한 만큼만 읽어오기.
+- 태그와 지역 정보를 Ajax로 수정할 때 스터디 (+멤버, +매니저, +태그, +지역) 정보를 전부 가져올 필요가 있는가?
+- 스프링 데이터 JPA 메소드 작명, @EntityGraph와 @NamedEntityGraph 활용하기
+```java
+Study.java
+@NamedEntityGraph(name = "Study.withTagsAndManagers", attributeNodes = {
+        @NamedAttributeNode("tags"),
+        @NamedAttributeNode("managers")})
+@NamedEntityGraph(name = "Study.withZonesAndManagers", attributeNodes = {
+        @NamedAttributeNode("zones"),
+        @NamedAttributeNode("managers")})
+
+
+StudyRepository.java
+@EntityGraph(value = "Study.withTagsAndManagers", type = EntityGraph.EntityGraphType.LOAD)
+    Study findAccountWithTagsByPath(String path);
+    
+    @EntityGraph(value = "Study.withZonesAndManagers", type = EntityGraph.EntityGraphType.LOAD)
+    Study findAccountWithZonesByPath(String path);
+```
+- WithZones는 스프링 데이터 JPA에게 무의미 하며 무해한 키워드라서 쿼리는 findByPath와 같지만 다른 @EntityGraph를 적용할 수 있다.
+- Study의 상태가 JPA 관점에서 어떤 상태인가.
+- AccountService와 비교해보자.
+
+### 뷰 중복 코드 제거
+```java
+<script th:replace="fragments.html :: update-tags(baseUrl='/settings/tags')"></script>
+```
+- Account에 Tag를 추가하던 자바스크립트와 차이는 baseURL 뿐이다.
