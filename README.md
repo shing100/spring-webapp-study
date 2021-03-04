@@ -474,7 +474,7 @@ StudyRepository.java
 - AccountService와 비교해보자.
 
 ### 뷰 중복 코드 제거
-```java
+```html
 <script th:replace="fragments.html :: update-tags(baseUrl='/settings/tags')"></script>
 ```
 - Account에 Tag를 추가하던 자바스크립트와 차이는 baseURL 뿐이다.
