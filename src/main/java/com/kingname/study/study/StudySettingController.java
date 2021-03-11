@@ -7,11 +7,11 @@ import com.kingname.study.domain.Account;
 import com.kingname.study.domain.Study;
 import com.kingname.study.domain.Tag;
 import com.kingname.study.domain.Zone;
-import com.kingname.study.tag.TagForm;
-import com.kingname.study.zone.ZoneForm;
 import com.kingname.study.study.form.StudyDescriptionForm;
+import com.kingname.study.tag.TagForm;
 import com.kingname.study.tag.TagRepository;
 import com.kingname.study.tag.TagService;
+import com.kingname.study.zone.ZoneForm;
 import com.kingname.study.zone.ZoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
