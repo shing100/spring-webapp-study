@@ -12,6 +12,8 @@ public class EventForm {
 
     private String title;
 
+    private String description;
+
     private EventType eventType = EventType.FCFS;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

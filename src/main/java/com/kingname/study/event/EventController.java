@@ -8,6 +8,7 @@ import com.kingname.study.event.form.EventForm;
 import com.kingname.study.event.validator.EventValidator;
 import com.kingname.study.study.StudyService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
+@Slf4j
 @Controller
 @RequestMapping("/study/{path}")
 @RequiredArgsConstructor

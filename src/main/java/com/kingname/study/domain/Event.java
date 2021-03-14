@@ -4,6 +4,7 @@ import com.kingname.study.account.UserAccount;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,18 +30,18 @@ public class Event {
     private String description;
 
     @Column(nullable = false)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime createDateTime;
 
     @Column(nullable = false)
     private LocalDateTime endEnrollmentDateTime;
 
     @Column(nullable = false)
-    private LocalDateTime stateDateTime;
+    private LocalDateTime startDateTime;
 
     @Column(nullable = false)
     private LocalDateTime endDateTime;
 
-    @Column(nullable = true)
     private Integer limitOfEnrollments;
 
     @OneToMany(mappedBy = "event")
