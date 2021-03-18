@@ -76,6 +76,9 @@ public class Event {
 
         return false;
     }
+    public long getNumberOfAcceptedEnrollments() {
+        return this.enrollments.stream().filter(Enrollment::isAccepted).count();
+    }
 
     public int numberOfRemainSpots() {
         return this.limitOfEnrollments - (int) this.enrollments.stream().filter(Enrollment::isAccepted).count();
