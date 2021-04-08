@@ -24,12 +24,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @RequiredArgsConstructor
-class StudyControllerTest {
+public class StudyControllerTest {
 
-    @Autowired MockMvc mockMvc;
-    @Autowired StudyService studyService;
-    @Autowired StudyRepository studyRepository;
-    @Autowired AccountRepository accountRepository;
+    @Autowired
+    public MockMvc mockMvc;
+    @Autowired
+    public StudyService studyService;
+    @Autowired
+    public StudyRepository studyRepository;
+    @Autowired
+    public AccountRepository accountRepository;
 
     @AfterEach
     void afterEach() {

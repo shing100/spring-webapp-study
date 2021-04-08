@@ -4,6 +4,7 @@ import com.kingname.study.domain.Account;
 import com.kingname.study.domain.Study;
 import com.kingname.study.domain.Tag;
 import com.kingname.study.domain.Zone;
+import com.kingname.study.event.EnrollmentRepository;
 import com.kingname.study.study.form.StudyDescriptionForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,6 +21,7 @@ public class StudyService {
 
     private final StudyRepository studyRepository;
     private final ModelMapper modelMapper;
+    private final EnrollmentRepository enrollmentRepository;
 
     public Study createNewStudy(Study study, Account account) {
         Study newStudy = studyRepository.save(study);
@@ -154,5 +156,11 @@ public class StudyService {
 
     public void removeMember(Study study, Account account) {
         study.removeMember(account);
+    }
+
+    public Study getStudyToEnroll(String path) {
+        Study study = studyRepository.findStudyOnlyByPath(path);
+        checkIfExistingStudy(path, study);
+        return study;
     }
 }
