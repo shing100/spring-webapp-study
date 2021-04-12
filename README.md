@@ -478,3 +478,104 @@ StudyRepository.java
 <script th:replace="fragments.html :: update-tags(baseUrl='/settings/tags')"></script>
 ```
 - Account에 Tag를 추가하던 자바스크립트와 차이는 baseURL 뿐이다.
+
+
+
+## 모임 도메인
+- Event
+    - EventType (enum)
+    - Study
+    - Account createdBy
+    - String title
+    - @Lob String description
+    - int limitOfEnrollments
+    - List<Enrollment> enrollments
+
+- Event에서 Study 쪽으로 @ManyToOne 단방향 관계
+- Event와 Enrollment는 @OneToMany @ManyToOne 양방향 관계
+- Event는 Account 쪽으로 @ManyToOne 단방향 관계
+- Enrollment는 Account 쪽으로 @ManyToOne 단방향 관계
+
+
+### 타임리프 뷰에서 enum 값 선택하는 폼 보여주기
+```html
+<select th:field="*{eventType}"  class="custom-select mr-sm-2" id="eventType" aria-describedby="eventTypeHelp">
+    <option th:value="FCFS">선착순</option>
+    <option th:value="CONFIRMATIVE">관리자 확인</option>
+</select>
+```
+
+### DateTime 입력 포맷
+```java
+@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+private LocalDateTime endEnrollmentDateTime;
+```
+
+### 부트스트랩 modal 창 사용하기
+```html
+<button th:if="${event.isEnrollableFor(#authentication.principal)}"
+        class="btn btn-outline-primary" data-toggle="modal" data-target="#enroll">
+    <i class="fa fa-plus-circle"></i> 참가 신청
+</button>
+
+<div class="modal fade" id="enroll" tabindex="-1" role="dialog" aria-labelledby="enrollmentTitle" aria-hidden="true">
+</div>
+```
+> https://getbootstrap.com/docs/4.4/components/modal/
+
+### Moment.js
+- 날짜를 여러 형태로 표현해주는 라이브러리. 예) 2020년 3월, 일주일 뒤, 4시간 전, ...
+> https://momentjs.com/
+- npm install moment --save
+
+
+### 타임리프, 객체의 타입변환
+```html
+<span th:if="${event.eventType == T(com.studyolle.domain.EventType).FCFS}">선착순</span>
+<span th:if="${event.eventType == T(com.studyolle.domain.EventType).CONFIRMATIVE}">관리자 확인</span>
+```
+- T(FQCN)
+
+
+### 삭제 요청을 어떻게 보낼까?
+- POST “/study/{path}/events/{id}/delete” 
+- DELETE “/study/{path}/events/{id}
+
+### DELETE를 쓰려면
+- HTML의 FROM은 method로 GET과 POST만 지원한다. DELEET는 지원하지 않아.
+- https://www.w3.org/TR/html4/interact/forms.html#h-17.3
+- 그래도 굳이 쓰고 싶다면?
+
+### application.properties
+- HTML <FORM>에서 th:method에서 PUT 또는 DELETE를 사용해서 보내는 _method를 사용해서  @PutMapping과 @DeleteMapping으로 요청을 맵핑.
+- spring.mvc.hiddenmethod.filter.enabled=true
+
+
+### 타임리프 th:method
+```html
+<form th:action="@{'/study/' + ${study.path} + '/events/' + ${event.id}}" th:method="delete">
+    <button class="btn btn-primary" type="submit" aria-describedby="submitHelp">확인</button>
+</form>
+```
+
+### Event의 Enrollment 목록 순서를 정하려면
+```java
+@OneToMany(mappedBy = "event")
+@OrderBy("enrolledAt")
+private List<Enrollment> enrollments = new ArrayList<>();
+```
+- 이렇게 해둬야 정렬 조건을 줘야 매번 순서가 랜덤하게 바뀌지 않음.
+
+### 스프링 데이터 JPA가 제공하는 도메인 엔티티 컨버터 사용하기
+```java
+@GetMapping("/events/{eventId}/enrollments/{enrollmentId}/reject")
+public String rejectEnrollment(@PathVariable Long eventId, @PathVariable Long enrollmentId) {
+
+    Event event = eventRepository.findById(eventId).orElseThrow();
+    Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow();
+
+}
+
+@GetMapping("/events/{eventId}/enrollments/{enrollmentId}/reject")
+public String rejectEnrollment(@PathVariable(“eventId”) Event event, @PathVariable(“enrollmentId”) Enrollment enrollment)
+```
