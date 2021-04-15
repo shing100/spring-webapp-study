@@ -1,10 +1,12 @@
 package com.kingname.study.modules.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kingname.study.infra.MockMvcTest;
+import com.kingname.study.modules.study.StudyFactory;
 import com.kingname.study.modules.tag.Tag;
-import com.kingname.study.modules.zone.Zone;
 import com.kingname.study.modules.tag.TagForm;
 import com.kingname.study.modules.tag.TagRepository;
+import com.kingname.study.modules.zone.Zone;
 import com.kingname.study.modules.zone.ZoneForm;
 import com.kingname.study.modules.zone.ZoneRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -28,9 +30,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@MockMvcTest
 class SettingsControllerTest {
 
     @Autowired MockMvc mockMvc;
+    @Autowired StudyFactory studyFactory;
+    @Autowired AccountFactory accountFactory;
     @Autowired AccountRepository accountRepository;
     @Autowired PasswordEncoder passwordEncoder;
     @Autowired ObjectMapper objectMapper;
