@@ -1,6 +1,7 @@
 package com.kingname.study.modules.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kingname.study.infra.AbstractContainerBaseTest;
 import com.kingname.study.infra.MockMvcTest;
 import com.kingname.study.modules.study.StudyFactory;
 import com.kingname.study.modules.tag.Tag;
@@ -31,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @MockMvcTest
-class SettingsControllerTest {
+class SettingsControllerTest extends AbstractContainerBaseTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired StudyFactory studyFactory;

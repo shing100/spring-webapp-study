@@ -579,3 +579,38 @@ public String rejectEnrollment(@PathVariable Long eventId, @PathVariable Long en
 @GetMapping("/events/{eventId}/enrollments/{enrollmentId}/reject")
 public String rejectEnrollment(@PathVariable(“eventId”) Event event, @PathVariable(“enrollmentId”) Enrollment enrollment)
 ```
+
+### 테스트 DB를 PostgreSQL로 전환
+- 테스트 DB를 운영용 DB와 같은 유형으로 바꾸자.
+- JPA 또는 하이버네이트가 만들어주는 쿼리가 각 DB밴더에 따라 다르다.
+- 하지만 테스트용 DB를 운영하는 것은 번거롭다. CI 환경은?
+- 그래서 TestContainers를 사용한다.
+> https://www.testcontainers.org/
+
+```xml
+## TestContainers 설치
+<dependency>
+    <groupId>org.testcontainers</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>1.13.0</version>
+    <scope>test</scope>
+</dependency>
+
+## TestContainers PostgreSQL 모듈 설치
+<dependency>
+    <groupId>org.testcontainers</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>1.13.0</version>
+    <scope>test</scope>
+</dependency>
+```
+
+### 스프링 부트 연동
+- application-test.properties
+- spring.datasource.url=jdbc:tc:postgresql:///studytest
+- spring.datasource.driver-class-name=org.testcontainers.jdbc.ContainerDatabaseDriver
+
+
+- 모든 테스트에서 컨테이너 하나 사용하기
+- 싱글톤 컨테이너
+- https://www.testcontainers.org/test_framework_integration/manual_lifecycle_control/#singleton-containers

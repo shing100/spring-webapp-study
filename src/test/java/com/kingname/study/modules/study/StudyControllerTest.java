@@ -1,5 +1,6 @@
 package com.kingname.study.modules.study;
 
+import com.kingname.study.infra.AbstractContainerBaseTest;
 import com.kingname.study.modules.account.WithAccount;
 import com.kingname.study.modules.account.AccountRepository;
 import com.kingname.study.modules.account.Account;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @RequiredArgsConstructor
-public class StudyControllerTest {
+public class StudyControllerTest extends AbstractContainerBaseTest {
 
     @Autowired
     public MockMvc mockMvc;

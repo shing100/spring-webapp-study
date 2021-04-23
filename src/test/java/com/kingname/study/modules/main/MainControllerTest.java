@@ -1,5 +1,6 @@
 package com.kingname.study.modules.main;
 
+import com.kingname.study.infra.AbstractContainerBaseTest;
 import com.kingname.study.modules.account.AccountRepository;
 import com.kingname.study.modules.account.AccountService;
 import com.kingname.study.modules.account.form.SignUpForm;
@@ -20,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class MainControllerTest {
+class MainControllerTest extends AbstractContainerBaseTest {
 
     @Autowired MockMvc mockMvc;
     @Autowired AccountService accountService;
