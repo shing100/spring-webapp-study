@@ -648,3 +648,67 @@ public class AsyncConfig implements AsyncConfigurer {
 - 큐 용량이 다 차면, 코어 개수를 넘어서 ‘맥스 개수’(max pool size)에 다르기 전까지 새로운 쓰레드를 만들어 처리한다.
 - 맥스 개수를 넘기면 태스크를 처리하지 못한다.
 
+## 스터디 개설 알림
+- 스터디를 만들때가 아니라 공개할 때 알림
+- 알림 받을 사람: 스터디 주제와 지역에 매칭이 되는 Account
+- 알림 제목: 스터디 이름
+- 알림 메시지: 스터디 짧은 소개
+
+## QueryDSL 설정
+> http://www.querydsl.com/
+- 타입 세이프하게 JPA 쿼리를 작성할 수 있다.
+
+## QueryDSL 설치
+```xml
+<dependency>
+    <groupId>com.querydsl</groupId>
+    <artifactId>querydsl-jpa</artifactId>
+</dependency>
+
+<plugin>
+    <groupId>com.mysema.maven</groupId>
+    <artifactId>apt-maven-plugin</artifactId>
+    <version>1.1.3</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>process</goal>
+            </goals>
+            <configuration>
+                <outputDirectory>target/generated-sources/java</outputDirectory>
+                <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+            </configuration>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+    </dependencies>
+</plugin>
+```
+
+- 이후에 반드시 메이븐 컴파일 빌드 (mvn compile)를 해야 Q클래스를 생성해준다.
+- 애노테이션 프로세서
+
+### 스프링 데이터 JPA와 QueryDSL 연동
+- QuerydslPredicateExecutor 인터페이스 추가
+
+### Predicate 사용하기
+```java
+public interface AccountRepository extends JpaRepository<Account, Long>, QuerydslPredicateExecutor<Account> {
+
+}
+
+public class AccountPredicates {
+
+    public static Predicate findByTagsAndZones(Set<Tag> tags, Set<Zone> zones) {
+        return QAccount.account.zones.any().in(zones).and(QAccount.account.tags.any().in(tags));
+    }
+
+}
+```
+
+
