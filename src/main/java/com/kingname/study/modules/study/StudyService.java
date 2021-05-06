@@ -1,12 +1,14 @@
 package com.kingname.study.modules.study;
 
 import com.kingname.study.modules.account.Account;
+import com.kingname.study.modules.study.event.StudyCreatedEvent;
 import com.kingname.study.modules.tag.Tag;
 import com.kingname.study.modules.zone.Zone;
 import com.kingname.study.modules.event.EnrollmentRepository;
 import com.kingname.study.modules.study.form.StudyDescriptionForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +23,12 @@ public class StudyService {
     private final StudyRepository studyRepository;
     private final ModelMapper modelMapper;
     private final EnrollmentRepository enrollmentRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Study createNewStudy(Study study, Account account) {
         Study newStudy = studyRepository.save(study);
         newStudy.addManager(account);
+        eventPublisher.publishEvent(new StudyCreatedEvent(newStudy));
         return newStudy;
     }
 
