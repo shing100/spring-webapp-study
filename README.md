@@ -711,4 +711,27 @@ public class AccountPredicates {
 }
 ```
 
+## 알림 아이콘 변경
+- 읽지 않은 알림이 있는 경우 메인 네비게이션 바의 알림 아이콘을 색이 있는 아이콘으로 변경한다.
+- 핸들러 처리 이후, 뷰 랜더링 전에 스프링 웹 MVC HandlerInterceptor로 읽지 않은 메시지가 있는지 Model에 담아준다.
+> https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/servlet/HandlerInterceptor.html
+
+### 노티 핸들러 인터셉터 적용 범위
+- 리다이렉트 요청에는 적용하지 않기.
+- static 리소스 요청에는 적용하지 않기.
+
+### 핸들러 인터셉터 등록
+- 웹 MVC 설정 커스터마이징
+```java
+@Configuration
+@RequiredArgsConstructor
+public class WebConfig implements WebMvcConfigurer {
+// ToDo 인터셉터 등록
+}
+```
+
+### 타임리프 + 부트스트랩
+- th:if 조건문으로 읽지 않은 메시지가 있는지 확인.
+- text-info 클래스로 아이콘에 파란색 적용.
+
 
