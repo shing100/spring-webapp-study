@@ -2,6 +2,7 @@ package com.kingname.study.modules.study;
 
 import com.kingname.study.modules.account.Account;
 import com.kingname.study.modules.study.event.StudyCreatedEvent;
+import com.kingname.study.modules.study.event.StudyUpdateEvent;
 import com.kingname.study.modules.tag.Tag;
 import com.kingname.study.modules.zone.Zone;
 import com.kingname.study.modules.event.EnrollmentRepository;
@@ -22,7 +23,6 @@ public class StudyService {
 
     private final StudyRepository studyRepository;
     private final ModelMapper modelMapper;
-    private final EnrollmentRepository enrollmentRepository;
     private final ApplicationEventPublisher eventPublisher;
 
     public Study createNewStudy(Study study, Account account) {
@@ -78,6 +78,7 @@ public class StudyService {
 
     public void updateStudyDescription(Study study, StudyDescriptionForm studyDescriptionForm) {
         modelMapper.map(studyDescriptionForm, study);
+        eventPublisher.publishEvent(new StudyUpdateEvent(study, "스터디 소개를 수정했습니다."));
     }
 
     public void addTag(Study study, Tag tag) {
@@ -115,14 +116,17 @@ public class StudyService {
 
     public void close(Study study) {
         study.close();
+        eventPublisher.publishEvent(new StudyUpdateEvent(study, "스터디를 종료했습니다."));
     }
 
     public void startRecruit(Study study) {
         study.startRecruit();
+        eventPublisher.publishEvent(new StudyUpdateEvent(study, "팀원 모집을 시작합니다."));
     }
 
     public void stopRecruit(Study study) {
         study.stopRecruit();
+        eventPublisher.publishEvent(new StudyUpdateEvent(study, "팀원 모집을 중단했습니다."));
     }
 
     public boolean isValidPath(String newPath) {
