@@ -29,7 +29,8 @@ class StudySettingsControllerTest extends StudyControllerTest {
         Study study = createStudy("test-study", shing100);
 
         mockMvc.perform(get("/study/" + study.getPath() + "/settings/description"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"));
     }
 
     @Test
